@@ -1,0 +1,45 @@
+patch-package
+--- a/node_modules/snabbdom/snabbdom.js
++++ b/node_modules/snabbdom/snabbdom.js
+@@ -5,9 +5,16 @@ var is = require("./is");
+ var htmldomapi_1 = require("./htmldomapi");
+ function isUndef(s) { return s === undefined; }
+ function isDef(s) { return s !== undefined; }
++function hasSkip(s) { return isDef(s = s.hook) && isDef(s = s.skip) && s === true; }
+ var emptyNode = vnode_1.default('', {}, [], undefined, undefined);
++function sameVnodeId(vnode1Sel, vnode2Sel) {
++  return vnode1Sel.indexOf('#') > -1 && vnode1Sel.split('.')[0] === vnode2Sel.split('.')[0];
++}
+ function sameVnode(vnode1, vnode2) {
+-    return vnode1.key === vnode2.key && vnode1.sel === vnode2.sel;
++    return ((vnode1.key === vnode2.key && vnode1.sel === vnode2.sel)
++             || ('undefined' !== typeof vnode2.data && hasSkip(vnode2.data)
++                && 'undefined' !== typeof vnode1.sel && 'undefined' !== typeof vnode2.sel
++                && sameVnodeId(vnode1.sel, vnode2.sel)));
+ }
+ function isVnode(vnode) {
+     return vnode.sel !== undefined;
+@@ -43,8 +50,12 @@ function init(modules, domApi) {
+     }
+     function emptyNodeAt(elm) {
+         var id = elm.id ? '#' + elm.id : '';
+-        var c = elm.className ? '.' + elm.className.split(' ').join('.') : '';
+-        return vnode_1.default(api.tagName(elm).toLowerCase() + id + c, {}, [], undefined, elm);
++        var c = elm.className && 'string' === typeof elm.className ? '.' + elm.className.split(' ').join('.') : '';
++        var elmvnode = vnode(api.tagName(elm).toLowerCase() + id + c, {}, [], undefined, elm);
++        for (var child = elm.firstChild, ii = 0; child !== null; child = child.nextSibling, ii++) {
++          if ( 1 === child.nodeType && 'undefined' !== typeof elmvnode.children ) { elmvnode.children[ii] = emptyNodeAt(child) }
++        }
++        return elmvnode
+     }
+     function createRmCb(childElm, listeners) {
+         return function rmCb() {
+@@ -242,7 +253,7 @@ function init(modules, domApi) {
+         var elm = vnode.elm = oldVnode.elm;
+         var oldCh = oldVnode.children;
+         var ch = vnode.children;
+-        if (oldVnode === vnode)
++        if (oldVnode === vnode || ('undefined' !== typeof vnode.data && hasSkip(vnode.data)))
+             return;
+         if (vnode.data !== undefined) {
+             for (i = 0; i < cbs.update.length; ++i)

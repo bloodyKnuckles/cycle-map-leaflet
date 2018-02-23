@@ -1,0 +1,34 @@
+{
+  "name": "cycle-map-leaflet",
+  "version": "0.0.1",
+  "description": "CycleJS map driver for Leaflet",
+  "main": "client.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bloodyKnuckles/cycle-map-leaflet.git"
+  },
+  "dependencies": {
+    "@cycle/dom": "^20.1.0",
+    "@cycle/run": "^4.1.0",
+    "leaflet": "^1.3.0",
+    "xstream": "^11.1.0"
+  },
+  "devDependencies": {
+    "patch-package": "^5.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jay Scott ANDERSON",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/bloodyKnuckles/cycle-map-leaflet/issues"
+  },
+  "homepage": "https://github.com/bloodyKnuckles/cycle-map-leaflet#readme",
+  "keywords": [
+    "cyclejs",
+    "map",
+    "driver",
+    "leaflet"
+  ]
+}
