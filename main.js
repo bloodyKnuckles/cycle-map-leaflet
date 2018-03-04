@@ -7,15 +7,21 @@ module.exports = function main (sources) {
   const list = JSON.parse(document.head.querySelector('[name=markers]').content)
 
   const markerid$ = sources.map.select('markers').events('mouseover').map(markerobj => markerobj.id)
-  const listid$ = sources.DOM.select('div#two').select('div.listitem').events('mouseover')
+  const listid$ = sources.DOM.select('div#list').select('div.listitem').events('mouseover')
    .map(evt => parseInt(evt.target.id.substr(1)))
 
   const vdom$ = xs.merge(markerid$, listid$)
     .map(id => div([
-        div('#one', 'one'),
-        div('#map', {hook:{skip:true}}),
+        div('#nav', 'nav'),
+        div([
+          div('#map', {hook:{skip:true}}),
+          div(
+            '#det',
+            ((li) => li.id + ': ' + li.latlong)(list.find(item => item.id == id))
+          )
+        ]),
         div(
-          '#two',
+          '#list',
           list.map(markerobj =>
               div(
                 '#_'+markerobj.id+'.listitem',
@@ -23,12 +29,7 @@ module.exports = function main (sources) {
                 markerobj.id
               )
             )
-        ),
-        div(
-          '#three',
-          ((li) => li.id + ': ' + li.latlong)(list.find(item => item.id == id))
         )
-
       ]))
 
   const markercmd$ = markerid$.map(id => { return {cmd: 'highlight', data: id}})
