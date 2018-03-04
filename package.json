@@ -17,6 +17,8 @@
     "patch-package": "^5.1.1"
   },
   "scripts": {
+    "prepare": "patch-package",
+    "build": "browserify client.js > bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jay Scott ANDERSON",
