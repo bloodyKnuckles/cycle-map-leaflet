@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>map layout</title>
+
+<meta name="markers" content='[{"latlong": [37.3964314,-94.7155675], "id": 117373, "asking_price": 220000},{"latlong": [37.4214687,-94.7001225], "id": 117932, "asking_price": 52000},{"latlong": [37.4132088,-94.7186551], "id": 117937, "asking_price": 86500},{"latlong": [37.4585255,-94.690276], "id": 117936, "asking_price": 87500},{"latlong": [37.4100108,-94.7205787], "id": 117933, "asking_price": 49900},{"latlong": [37.388975,-94.7093849], "id": 117934, "asking_price": 65000},{"latlong": [37.1642886,-94.8482928], "id": 117935, "asking_price": 220000},{"latlong": [37.4496049,-94.6902154], "id": 117925, "asking_price": 154500},{"latlong": [37.390856,-94.7135799], "id": 117650, "asking_price": 195000},{"latlong": [37.4268986,-94.6977895], "id": 117926, "asking_price": 89000}]'>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+<style>
+html, body, #app, #container {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#container {
+  display: table;
+  min-height: 600px;
+}
+
+#header {
+  height: 100px;
+  background-color: grey;
+  display: table-row;
+}
+
+#content {
+  height: 100%;
+  background-color: #DDDDDD;
+  display: table-row;
+  overflow: auto;
+}
+
+#list, #mapbox {
+  width: 50%; height: 100%; margin: 0;
+  float: left;
+}
+
+#mapbox table {
+  width: 100%; height: 100%; margin: 0; padding: 0;
+}
+#mapbox table td, #map {
+  width: 100%; height: 100%; margin: 0; padding: 0;
+}
+#det {
+  height: 100px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="app"><div id="container"><div id="header">header</div><div id="content"><div id="list"><div id="_123" class="listitem"><img src="http://cobbrealty.com/pics/117933_0_2.JPG"></div><div id="_456" class="listitem"><img src="http://cobbrealty.com/pics/117373_0_2.JPG"></div></div><div id="mapbox"><table><tr><td><div id="map"></div></td></tr><tr><td><div id="det">det</div></td></tr></table></div></div></div></div>
+<div>more<br><br></div>
+
+<script>
+
+const init = {
+  id: 'map', center: [37.4109, -94.7050], zoom: 12,
+  url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  tlopts: {
+    minZoom: 8, maxZoom: 18,
+    attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+  },
+  markers: JSON.parse(document.head.querySelector('[name=markers]').content)
+}
+
+var map = L.map(init.id).setView(init.center, init.zoom),
+    ic1 = L.icon({iconUrl: 'https://cdn.mapmarker.io/api/v1/pin?text=&size=30&background=CCCCFF&color=FFF&hoffset=-1'}),
+    ic2 = L.icon({iconUrl: 'https://cdn.mapmarker.io/api/v1/pin?text=&size=30&background=FF3333&color=FFF&hoffset=-1'})
+L.tileLayer(init.url, init.tlopts).addTo(map);
+init.markers = init.markers.map((markerobj) => {
+  markerobj.marker = L.marker(markerobj.latlong, {icon: ic1}).addTo(map)
+   return markerobj
+})
+
+</script>
+</body>
+</html>

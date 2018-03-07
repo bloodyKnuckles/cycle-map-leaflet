@@ -5,13 +5,15 @@ const L = require('leaflet')
 function makeMapDriver (init) {
 
   var map = L.map(init.id).setView(init.center, init.zoom),
-      ic1 = L.icon({iconUrl: 'https://cdn.mapmarker.io/api/v1/pin?text=&size=30&background=CCCCFF&color=FFF&hoffset=-1'}),
-      ic2 = L.icon({iconUrl: 'https://cdn.mapmarker.io/api/v1/pin?text=&size=30&background=FF3333&color=FFF&hoffset=-1'})
-  L.tileLayer(init.url, init.tlopts).addTo(map);
-  init.markers = init.markers.map((markerobj) => {
-    markerobj.marker = L.marker(markerobj.latlong, {icon: ic1}).addTo(map)
-     return markerobj
+      markernormal  = L.icon({iconUrl: init.markerstateurls.normal}),
+      markerfocused = L.icon({iconUrl: init.markerstateurls.focused})
+  L.tileLayer(init.url, init.tlopts).addTo(map)
+  init.markers = init.markers.map(markerobj => {
+    markerobj.marker = L.marker(markerobj.latlong, {icon: markernormal}) //.addTo(map)
+    return markerobj
   })
+  var group = L.featureGroup(init.markers.map(markerobj => markerobj.marker)).addTo(map)
+  map.fitBounds(group.getBounds(), {padding: [50,50]})
 
   function mapDriver (cmd$, name = 'map') {
 
@@ -23,7 +25,7 @@ function makeMapDriver (init) {
             break
           case 'highlight':
             init.markers.forEach(markerobj => {
-              markerobj.marker.setIcon(cmd.data === markerobj.id? ic2: ic1)
+              markerobj.marker.setIcon(cmd.data === markerobj.id? markerfocused: markernormal)
             })
             break
         }

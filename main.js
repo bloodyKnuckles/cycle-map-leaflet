@@ -1,5 +1,10 @@
 const xs = require('xstream').default
 const div = require('@cycle/dom').div
+const img = require('@cycle/dom').img
+const table = require('@cycle/dom').table
+const tbody = require('@cycle/dom').tbody
+const tr = require('@cycle/dom').tr
+const td = require('@cycle/dom').td
 
 
 module.exports = function main (sources) {
@@ -8,28 +13,35 @@ module.exports = function main (sources) {
 
   const markerid$ = sources.map.select('markers').events('mouseover').map(markerobj => markerobj.id)
   const listid$ = sources.DOM.select('div#list').select('div.listitem').events('mouseover')
-   .map(evt => parseInt(evt.target.id.substr(1)))
+   .map(evt => parseInt(evt.currentTarget.id.substr(1)))
 
   const vdom$ = xs.merge(markerid$, listid$)
-    .map(id => div([
-        div('#nav', 'nav'),
-        div([
-          div('#map', {hook:{skip:true}}),
+    .map(id => div('#container', [
+        div('#header', 'header'),
+        div('#content', [
           div(
-            '#det',
-            ((li) => li.id + ': ' + li.latlong)(list.find(item => item.id == id))
-          )
-        ]),
-        div(
-          '#list',
-          list.map(markerobj =>
-              div(
-                '#_'+markerobj.id+'.listitem',
-                {style: {fontWeight: markerobj.id === id? 'bold': 'normal'}},
-                markerobj.id
-              )
+            '#list',
+            list.map(markerobj =>
+              div('#_' + markerobj.id + '.listitem', [
+                img({
+                  attrs: {src: 'http://cobbrealty.com/pics/' + markerobj.id + '_0_2.JPG'},
+                  style: {border: markerobj.id === id? '1px solid red': 0}
+                })
+              ])
             )
-        )
+          ),
+          div('#mapbox', [
+            table([tbody([
+              tr([td([div('#map', {hook:{skip:true}})])]),
+              tr([td([
+                div(
+                  '#det',
+                  ((li) => li.id + ': ' + li.latlong)(list.find(item => item.id == id))
+                )
+              ])])
+            ])])
+          ])
+        ]),
       ]))
 
   const markercmd$ = markerid$.map(id => { return {cmd: 'highlight', data: id}})
