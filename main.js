@@ -22,11 +22,10 @@ module.exports = function main (sources) {
           div(
             '#list',
             list.map(markerobj =>
-              div('#_' + markerobj.id + '.listitem', [
-                img({
-                  attrs: {src: 'http://cobbrealty.com/pics/' + markerobj.id + '_0_2.JPG'},
-                  style: {border: markerobj.id === id? '1px solid red': 0}
-                })
+              div('#_' + markerobj.id + '.listitem',
+                {class: {focused: markerobj.id === id? true: false}}, [
+                img({attrs: {src: 'http://cobbrealty.com/pics/' + markerobj.id + '_0_2.JPG'}}),
+                div('.info', '$' + markerobj.asking_price)
               ])
             )
           ),

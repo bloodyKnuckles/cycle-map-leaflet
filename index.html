@@ -4,7 +4,7 @@
 <title>mapper</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="markers" content='[{"latlong": [37.443104,-94.707405], "id": 117933}, {"latlong": [37.392834,-94.688538], "id": 117373}]'>
+<meta name="markers" content='[{"latlong": [37.443104,-94.707405], "id": 117933, "asking_price": 123}, {"latlong": [37.392834,-94.688538], "id": 117373, "asking_price": 456}]'>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
 <style>
@@ -36,6 +36,17 @@ html, body, #app, #container {
 #list, #mapbox {
   width: 50%; height: 100%; margin: 0;
   float: left;
+  overflow: auto;
+}
+
+.listitem {
+  padding: .5em; border: 1px solid silver;
+  background-color: white;
+  float: left;
+}
+
+.listitem.focused {
+  background-color: #FFFFE0;
 }
 
 #mapbox table {
@@ -52,7 +63,7 @@ html, body, #app, #container {
 </head>
 <body>
 
-<div id="app"><div id="container"><div id="header">header</div><div id="content"><div id="list"><div id="_117933" class="listitem"><img src="http://cobbrealty.com/pics/117933_0_2.JPG"></div><div id="_117373" class="listitem"><img src="http://cobbrealty.com/pics/117373_0_2.JPG"></div></div><div id="mapbox"><table><tbody><tr><td><div id="map"></div></td></tr><tr><td><div id="det">det</div></td></tr></tbody></table></div></div></div></div>
+<div id="app"><div id="container"><div id="header">header</div><div id="content"><div id="list"><div id="_117933" class="listitem"><img src="http://cobbrealty.com/pics/117933_0_2.JPG"><div class="info">$123</div></div><div id="_117373" class="listitem"><img src="http://cobbrealty.com/pics/117373_0_2.JPG"><div class="info">$456</div></div></div><div id="mapbox"><table><tbody><tr><td><div id="map"></div></td></tr><tr><td><div id="det">det</div></td></tr></tbody></table></div></div></div></div>
 <div>more<br><br></div>
 
 <script src="bundle.js"></script>
